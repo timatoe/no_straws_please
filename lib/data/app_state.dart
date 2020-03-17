@@ -14,7 +14,10 @@ class AppState extends Model {
 
   Phrase getPhrase(int id) => _phrases.singleWhere((v) => v.id == id);
 
-  List<Phrase> get selectedPhrases => _phrases.where((v) => v.isSelected).toList();
+  Future<List<Phrase>> get selectedPhrases async {
+    await _loading;
+    return _phrases.where((v) => v.isSelected).toList();
+  } 
 
   List<Phrase> searchPhrases(String terms) => _phrases
   .where((v) => v.language.toString().toLowerCase().contains(terms.toLowerCase()))
@@ -23,7 +26,7 @@ class AppState extends Model {
   void setIsSelected(int id, bool isSelected) {
     Phrase phrase = getPhrase(id);
     phrase.isSelected = isSelected;
-    setSelectedPhraseId(id);
+    setSelectedPhraseId(isSelected ? id : -1);
     notifyListeners();
   }
 

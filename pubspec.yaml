@@ -1,7 +1,7 @@
 name: no_straw_please
 description: An app to help you avoid straws in your drinks.
 
-version: 1.0.0+1
+version: 1.0.1+1
 
 environment:
   sdk: ">=2.2.2 <3.0.0"

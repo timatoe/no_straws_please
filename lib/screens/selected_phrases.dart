@@ -12,30 +12,40 @@ class SelectedPhrasesScreen extends StatelessWidget {
     return CupertinoTabView(
       builder: (context) {
         final model = ScopedModel.of<AppState>(context, rebuildOnChange: true);
+        final selectedPhrases = model.selectedPhrases;
         
         return CupertinoPageScaffold(
           navigationBar: CupertinoNavigationBar(
             middle: Text(''),
           ),
-          child: Center(
-            child: model.selectedPhrases.isEmpty
-              ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'You haven\'t selected a language yet.',
-                  style: Styles.headlineDescription,
-                ),
-              )
-            : ListView(
-              children: [
-                SizedBox(height: 24),
-                for (Phrase phrase in model.selectedPhrases)
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(16, 0, 16, 24),
-                    child: PhraseHeadline(phrase),
-                  )
-              ],
-            ), 
+          child: FutureBuilder<List<Phrase>>(
+            future: selectedPhrases,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Center(
+                  child: snapshot.data.isEmpty
+                    ? Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Text(
+                        'You haven\'t selected a language yet.',
+                        style: Styles.headlineDescription,
+                      ),
+                    )
+                  : ListView(
+                    children: [
+                      SizedBox(height: 24),
+                      for (Phrase phrase in snapshot.data)
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 24),
+                          child: PhraseHeadline(phrase),
+                        )
+                    ],
+                  ), 
+                );
+              } else {
+                return Text('');
+              }
+            },
           ),
         );
       }

@@ -1,4 +1,4 @@
-package com.example.no_straw_please
+package com.kismetapps.nostrawplease
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

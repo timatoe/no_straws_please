@@ -59,11 +59,8 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  int _selectedViewIndex = 0;
 
   Widget _buildHeader(BuildContext context, AppState model) {
-    final phrase = model.getPhrase(widget.id);
-
     return SizedBox(
       height: 150,
       child: Stack(

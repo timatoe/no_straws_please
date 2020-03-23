@@ -19,9 +19,6 @@ void main() {
     ScopedModel<AppState>(
       model: AppState()..load(),
       child: CupertinoApp(
-        theme: CupertinoThemeData(
-          brightness: Brightness.light
-        ),
         debugShowCheckedModeBanner: false,
         color: Styles.appBackground,
         home: HomeScreen(),

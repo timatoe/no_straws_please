@@ -58,7 +58,7 @@ class _ColorChangingIconState
   Widget build(BuildContext context) {
     return Icon(
       widget.icon,
-      semanticLabel: 'Close button',
+      semanticLabel: 'Back button',
       size: widget.size,
       color: _colorTween?.evaluate(animation),
     );
@@ -75,22 +75,25 @@ class _ColorChangingIconState
 }
 
 /// A simple "close this modal" button that invokes a callback when pressed.
-class CloseButton extends StatefulWidget {
-  const CloseButton(this.onPressed);
+class BackButton extends StatefulWidget {
+  const BackButton(this.onPressed);
 
   final VoidCallback onPressed;
 
   @override
-  CloseButtonState createState() {
-    return CloseButtonState();
+  BackButtonState createState() {
+    return BackButtonState();
   }
 }
 
-class CloseButtonState extends State<CloseButton> {
+class BackButtonState extends State<BackButton> {
   bool tapInProgress = false;
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
+    bool isDark = brightnessValue == Brightness.dark;
+    
     return GestureDetector(
       onTapDown: (details) {
         setState(() => tapInProgress = true);
@@ -102,25 +105,14 @@ class CloseButtonState extends State<CloseButton> {
       onTapCancel: () {
         setState(() => tapInProgress = false);
       },
-      child: ClipOval(
-        child: FrostedBox(
-          child: Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: ColorChangingIcon(
-                CupertinoIcons.clear_thick,
-                duration: Duration(milliseconds: 300),
-                color: tapInProgress
-                    ? Styles.closeButtonPressed
-                    : Styles.closeButtonUnpressed,
-                size: 20,
-              ),
-            ),
-          ),
+      child: Center(
+        child: ColorChangingIcon(
+          CupertinoIcons.back,
+          duration: Duration(milliseconds: 300),
+          color: tapInProgress
+              ? Styles.backButtonPressed
+              : isDark ? Styles.darkBackButtonUnpressed : Styles.backButtonUnpressed,
+          size: 20,
         ),
       ),
     );

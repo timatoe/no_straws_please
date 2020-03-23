@@ -10,23 +10,24 @@ class AppState extends Model {
 
   AppState() : _phrases = LocalPhraseProvider.phrases;
 
+  Phrase _selectedPhrase;
+
   List<Phrase> get allPhrases => List<Phrase>.from(_phrases);
 
   Phrase getPhrase(int id) => _phrases.singleWhere((v) => v.id == id);
 
-  Future<List<Phrase>> get selectedPhrases async {
+  Future<Phrase> getSelectedPhrase() async {
     await _loading;
-    return _phrases.where((v) => v.isSelected).toList();
+    return _selectedPhrase;
   } 
 
   List<Phrase> searchPhrases(String terms) => _phrases
   .where((v) => v.language.toString().toLowerCase().contains(terms.toLowerCase()))
   .toList();
 
-  void setIsSelected(int id, bool isSelected) {
-    Phrase phrase = getPhrase(id);
-    phrase.isSelected = isSelected;
-    setSelectedPhraseId(isSelected ? id : -1);
+  void setSelectedPhrase(int id) {
+    _selectedPhrase = getPhrase(id);
+    _setSelectedPhraseId(_selectedPhrase.id);
     notifyListeners();
   }
 
@@ -37,7 +38,7 @@ class AppState extends Model {
 
   int _selectedPhraseId = -1;
 
-  Future<void> setSelectedPhraseId(int id) async {
+  Future<void> _setSelectedPhraseId(int id) async {
     _selectedPhraseId = id;
     await _saveToSharedPrefs();
     notifyListeners();
@@ -56,8 +57,7 @@ class AppState extends Model {
     final prefs = await SharedPreferences.getInstance();
     int id = prefs.getInt(_selectedPhraseIdKey) ?? -1;
     if (id != -1) {
-      Phrase phrase = getPhrase(id);
-      phrase.isSelected = true;
+      _selectedPhrase = getPhrase(id);
     }
     notifyListeners();
   }

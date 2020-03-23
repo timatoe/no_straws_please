@@ -1,9 +1,10 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:no_straw_please/data/app_state.dart';
 import 'package:no_straw_please/data/phrase.dart';
-import 'package:no_straw_please/screens/details.dart';
-
+import 'package:no_straw_please/extensions.dart';
+import 'package:scoped_model/scoped_model.dart';
 import '../styles.dart';
 
 class PhraseHeadline extends StatelessWidget {
@@ -13,11 +14,16 @@ class PhraseHeadline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = ScopedModel.of<AppState>(context, rebuildOnChange: true);
+
+    final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
+    bool isDark = brightnessValue == Brightness.dark;
+
     return GestureDetector(
-      onTap: () => Navigator.of(context).push<void>(CupertinoPageRoute(
-        builder: (context) => DetailsScreen(phrase.id),
-        fullscreenDialog: true,
-      )),
+      onTap: () => {
+        appState.setSelectedPhrase(phrase.id),
+        Navigator.of(context).pop()
+      },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -29,13 +35,12 @@ class PhraseHeadline extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(phrase.language.toString(), style: Styles.headlineName),
+                    Text(
+                      phrase.language.toString().split(".").last.capitalize(), 
+                      style: isDark ? Styles.darkHeadlineName : Styles.headlineName
+                      ),
                   ],
                 ),
-                // Text(
-                //   phrase.phrase,
-                //   style: Styles.headlineDescription,
-                // )
               ]
             ),
           )

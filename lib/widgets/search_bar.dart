@@ -14,10 +14,13 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
+    bool isDark = brightnessValue == Brightness.dark;
+
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Styles.searchBackground,
-        borderRadius: BorderRadius.circular(10),
+        color: isDark ? Styles.darkSearchBackground : Styles.searchBackground,
+        borderRadius: BorderRadius.circular(32),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -26,6 +29,9 @@ class SearchBar extends StatelessWidget {
         ),
         child: Row(
           children: [
+            SizedBox(
+              width: 8,
+            ),
             ExcludeSemantics(
               child: Icon(
                 CupertinoIcons.search,
@@ -37,7 +43,7 @@ class SearchBar extends StatelessWidget {
                 controller: controller,
                 focusNode: focusNode,
                 decoration: null,
-                style: Styles.searchText,
+                style: isDark ? Styles.darkSearchText : Styles.searchText,
                 cursorColor: Styles.searchCursorColor,
               ),
             ),
@@ -50,6 +56,9 @@ class SearchBar extends StatelessWidget {
                 semanticLabel: 'Clear search terms',
                 color: Styles.searchIconColor,
               ),
+            ),
+            SizedBox(
+              width: 8,
             ),
           ],
         ),
